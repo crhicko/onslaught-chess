@@ -1,0 +1,10 @@
+.wrapper{
+    text-align:center;
+    width: 100px;
+    height: 100px;
+    display:grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8,1fr);
+    grid-gap: 0px;
+    background-color: grey;
+}
