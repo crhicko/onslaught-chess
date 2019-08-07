@@ -1,0 +1,12 @@
+.tile {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+/* .tile:hover{
+    border: 3px solid salmon;
+} */
+
+.hoverable:hover{
+    border: 3px solid salmon;
+}
