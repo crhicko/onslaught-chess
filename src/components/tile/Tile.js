@@ -9,8 +9,14 @@ const Tile = (props) => {
     // }
 
     return(
-        <div className={"tile" + " " + (props.whatToHover==="tile" ? "hoverable": "")} style={{backgroundColor: props.color}}>
-            <Piece piece={props.piece} whatToHover={props.whatToHover}></Piece>
+        <div className={"tile" + " " + (props.whatToHover==="tile" ? "hoverable": "")} style={{backgroundColor: props.color}}
+            onClick={props.whatToHover==='tile' ? props.pieceClickFunction : null}>
+
+            <Piece
+                piece={props.piece}
+                whatToHover={props.whatToHover}
+                pieceClickFunction={props.pieceClickFunction}
+            ></Piece>
         </div>
     )
 };
