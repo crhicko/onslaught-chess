@@ -8,7 +8,12 @@ const Piece = (props) => {
                 props.piece==='none' ? null : <img src={require("H:/Users/voltr/Desktop/onslaught-chess/src/resources/images/black"+ props.piece + ".png")}
                 alt="knight-piece"
                 width="75px"
-                onClick={props.whatToHover==='piece' ? props.pieceClickFunction : null}
+                zIndex='100'
+                onClick={() => {
+                    console.log(props.piece)
+                    props.pieceClickFunction(props.piece, props.row, props.col)
+                }}
+                //onClick={props.whatToHover==='piece' ? props.pieceClickFunction(props.piece) : null}
                 ></img>
             }
         </div>
