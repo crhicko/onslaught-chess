@@ -2,6 +2,7 @@ import React from 'react';
 import './Board.css';
 import Tile from '../tile/Tile'
 import { arrayExpression } from '@babel/types';
+import { type } from 'os';
 
 //TODO: refactor the boardTiles and boardPieces arrays to be two dimensional
 
@@ -25,28 +26,22 @@ class Board extends React.Component {
     constructor(){
         super();
 
-        
-        
+
+
         //TODO: refactor this, kinda messy
         for(let i = 0; i < 8; i++)
             for(let j = 0 ; j < 8; j++){
-                this.boardTiles.push(((i*8)+j) + (((i%2===0) ? 0 : 1)))
-                this.boardPieces[i*8 + j] = this.pieces[(Math.ceil(Math.random() * (this.pieces.length - 1)))]
-                
                 let tileObject = {
-                    color: (j%2)===0 ? (i%2===0 ? "white" : "black") : (i%2===0 ? "black" : "white"),
+                    color: (j%2)===0 ? (i%2===0 ? "white" : "grey") : (i%2===0 ? "grey" : "white"),
                     x: j,
                     y: i,
-                    piece: this.pieces[(Math.ceil(Math.random() * (this.pieces.length - 1)))]
+                    piece: {
+                        type: this.pieces[(Math.ceil(Math.random() * (this.pieces.length - 1)))],
+                        color: 'white'
+                    }
                 }
-
                 this.rboardTiles[i].push(tileObject);
-                
             }
-
-            console.log(this.rboardTiles)
-
-            
     }
 
     boardClickHandler = (pieceType, row, col) => {
@@ -59,6 +54,7 @@ class Board extends React.Component {
     }
 
     //runs on every click of a piece
+    /*
     setHighlightedTiles = (piece, col_base, row_base) => {
         console.log(piece);
         console.log(col_base);
@@ -151,6 +147,7 @@ class Board extends React.Component {
         // console.log(this.boardTilesElements);
         this.forceUpdate();
     }
+    */
 
     getIfTileIsHighlighted = (i) => {
         let result = false;
@@ -165,31 +162,24 @@ class Board extends React.Component {
     }
 
     render() {
+        this.rboardTiles.map( rows => {
+            return rows.map((t,i) => console.log(t.piece))
+        })
         return(
             <div className="wrapper center">
-                {/* {
-                    this.boardTilesElements = this.boardTiles.map((num,i) => (
-                        <Tile tileColor={
-                                (((num%2)===0) ? "white" : "grey")
-                            }
-                            isHighlighted={this.getIfTileIsHighlighted(i) ? true : false}
-                            row={Math.floor(i/8)}
-                            col={i%8}
-                            piece={this.boardPieces[i]}
-                            whatToHover={this.state.userActionSelect}
-                            pieceClickFunction={this.boardClickHandler}
-                        ></Tile>
-                    ))
-                } */}
                 {
                     this.rboardTiles.map( rows => {
                         return rows.map((t,i) => (
-                            <Tile 
+                            <Tile
                                 tileColor={t.color}
                                 isHighlighted={this.getIfTileIsHighlighted(i) ? true : false}
                                 col={t.x}
                                 row={t.y}
                                 piece={t.piece}
+                                // piece={
+                                //     {type: "knight",
+                                //     color: "white"
+                                // }}
                                 whatToHover={this.state.userActionSelect}
                                 pieceClickFunction={this.boardClickHandler}
                             ></Tile>

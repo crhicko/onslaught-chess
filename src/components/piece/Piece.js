@@ -2,10 +2,11 @@ import React from 'react';
 import '../piece/Piece.css'
 
 const Piece = (props) => {
+    // console.log(prop s)
     return(
-        <div className={props.piece + ' ' + (props.whatToHover==="piece" ? "hoverable": "")} >
+        <div className={props.piece.type + ' ' + (props.whatToHover==="piece" ? "hoverable": "")} >
             {
-                props.piece==='none' ? null : <img src={require("../../resources/images/black"+ props.piece + ".png")}
+                props.piece.type ==='none' ? null : <img src={require("../../resources/images/" + props.piece.color + props.piece.type + ".png")}
                 alt="knight-piece"
                 width="75px"
                 zindex='100'

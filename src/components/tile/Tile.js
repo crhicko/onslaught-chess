@@ -6,8 +6,8 @@ const Tile = (props) => {
     // classes = {
     //     "tile":true,
     //     (props.whatToHover==="piece" ? "hoverable": ""): true
-    // } 
-    
+    // }
+
     var styles = {
         backgroundColor: 'blue',
         zIndex: 15,
