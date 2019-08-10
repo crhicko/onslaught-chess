@@ -6,7 +6,8 @@ const Tile = (props) => {
     // classes = {
     //     "tile":true,
     //     (props.whatToHover==="piece" ? "hoverable": ""): true
-    // }
+    // } 
+    
     var styles = {
         backgroundColor: 'blue',
         zIndex: 15,
@@ -15,7 +16,7 @@ const Tile = (props) => {
         position: 'absolute',
         opacity: 0.5
     }
-
+    // console.log(props)
     return(
         <div className={"tile" + " " + (props.whatToHover==="tile" ? "hoverable": "")} style={{backgroundColor: props.tileColor}}
             onClick={
@@ -30,6 +31,7 @@ const Tile = (props) => {
                 row={props.row}
                 col={props.col}
                 piece={props.piece}
+                // piece="knight"
                 whatToHover={props.whatToHover}
                 pieceClickFunction={props.pieceClickFunction}
             ></Piece>

@@ -6,6 +6,8 @@ import { arrayExpression } from '@babel/types';
 //TODO: refactor the boardTiles and boardPieces arrays to be two dimensional
 
 class Board extends React.Component {
+    rboardTiles = [[],[],[],[],[],[],[],[]];
+
     boardTiles = [];
     boardPieces = [];
     boardTilesElements=[];
@@ -23,12 +25,28 @@ class Board extends React.Component {
     constructor(){
         super();
 
+        
+        
         //TODO: refactor this, kinda messy
         for(let i = 0; i < 8; i++)
             for(let j = 0 ; j < 8; j++){
                 this.boardTiles.push(((i*8)+j) + (((i%2===0) ? 0 : 1)))
                 this.boardPieces[i*8 + j] = this.pieces[(Math.ceil(Math.random() * (this.pieces.length - 1)))]
+                
+                let tileObject = {
+                    color: (j%2)===0 ? (i%2===0 ? "white" : "black") : (i%2===0 ? "black" : "white"),
+                    x: j,
+                    y: i,
+                    piece: this.pieces[(Math.ceil(Math.random() * (this.pieces.length - 1)))]
+                }
+
+                this.rboardTiles[i].push(tileObject);
+                
             }
+
+            console.log(this.rboardTiles)
+
+            
     }
 
     boardClickHandler = (pieceType, row, col) => {
@@ -149,7 +167,7 @@ class Board extends React.Component {
     render() {
         return(
             <div className="wrapper center">
-                {
+                {/* {
                     this.boardTilesElements = this.boardTiles.map((num,i) => (
                         <Tile tileColor={
                                 (((num%2)===0) ? "white" : "grey")
@@ -162,6 +180,21 @@ class Board extends React.Component {
                             pieceClickFunction={this.boardClickHandler}
                         ></Tile>
                     ))
+                } */}
+                {
+                    this.rboardTiles.map( rows => {
+                        return rows.map((t,i) => (
+                            <Tile 
+                                tileColor={t.color}
+                                isHighlighted={this.getIfTileIsHighlighted(i) ? true : false}
+                                col={t.x}
+                                row={t.y}
+                                piece={t.piece}
+                                whatToHover={this.state.userActionSelect}
+                                pieceClickFunction={this.boardClickHandler}
+                            ></Tile>
+                        ))
+                    })
                 }
             </div>
         );
