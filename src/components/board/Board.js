@@ -176,10 +176,6 @@ class Board extends React.Component {
                                 col={t.x}
                                 row={t.y}
                                 piece={t.piece}
-                                // piece={
-                                //     {type: "knight",
-                                //     color: "white"
-                                // }}
                                 whatToHover={this.state.userActionSelect}
                                 pieceClickFunction={this.boardClickHandler}
                             ></Tile>
