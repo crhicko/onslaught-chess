@@ -50,43 +50,17 @@ class Board extends React.Component {
     }
 
     boardClickHandler = (tile) => {
-        // console.log("column(x): " + col);
-        // console.log("row(y): " + row);
-        // console.log(tile)
         this.setState({ userActionSelect: this.state.userActionSelect === 'piece' ? 'tile' : "piece"});
         if(this.state.userActionSelect === 'piece'){
-            this.setState({ pieceSelected: tile.piece.type});
+            this.setState({ pieceSelectedType: tile.piece.type});   //passing the whole object causes it to be reference notprimitve, breaking the movement
             this.setState({ currentTile: tile})
             console.log(tile)
             if(tile.piece.type)
                 this.setMovableTiles(tile)
         }
         else {
-            //console.log(tile)
-            // new Promise(() => {
-            //     this.boardTiles[tile.y][tile.x].piece = this.state.currentTile.piece
-            // }).then(() => {
-            //     console.log(this.state.currentTile)
-            //     this.boardTiles[this.state.currentTile.y][this.state.currentTile.x].piece.type = 'none'
-            // })
-
-
-            console.log(this.state.pieceSelected)
-            //console.log(this.boardTiles[tile.y][tile.x])
-            this.boardTiles[tile.y][tile.x].piece.type = this.state.pieceSelected;
-            console.log(this.state.currentTile.piece)
+            this.boardTiles[tile.y][tile.x].piece.type = this.state.pieceSelectedType;
             this.boardTiles[this.state.currentTile.y][this.state.currentTile.x].piece.type = 'none' //since state.curtile is this tile, noning it will none all of it
-            console.log(this.state.currentTile.piece)
-
-
-
-            // console.log(this.state.currentTile)
-            // let tempTile = this.state.currentTile;
-            // console.log(this.state.currentTile)
-            // console.log(tempTile.piece)
-            // this.boardTiles[tile.y][tile.x].piece = tempTile.piece;    //sets the piece on the new square
-            // console.log(tempTile.piece)
-            // this.boardTiles[tempTile.y][tempTile.x].piece.type = 'none';
             this.boardTiles.forEach(element => {
                 element.forEach(tile => {
                     tile.isMovable = false;
