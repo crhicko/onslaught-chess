@@ -75,7 +75,23 @@ class Board extends React.Component {
                 break;
             case 'king':
                 console.log(tile.piece)
-                this.boardTiles[tile.y + 1][tile.x + 1].isMovable = true;
+                let curTile
+                if((curTile = this.boardTiles[tile.y + 1][tile.x + 1]) !== undefined)
+                    curTile.isMovable = true;
+                if((curTile = this.boardTiles[tile.y + 1][tile.x + 0]) !== undefined)
+                    curTile.isMovable = true;
+                if((curTile = this.boardTiles[tile.y + 1][tile.x - 1]) !== undefined)
+                    curTile.isMovable = true;
+                if((curTile = this.boardTiles[tile.y + 0][tile.x - 1]) !== undefined)
+                    curTile.isMovable = true;
+                if((curTile = this.boardTiles[tile.y - 1][tile.x - 1]) !== undefined)
+                    curTile.isMovable = true;
+                if((curTile = this.boardTiles[tile.y - 1][tile.x + 0]) !== undefined)
+                    curTile.isMovable = true;
+                if((curTile = this.boardTiles[tile.y - 1][tile.x + 1]) !== undefined)
+                    curTile.isMovable = true;
+                if((curTile = this.boardTiles[tile.y + 0][tile.x + 1]) !== undefined)
+                    curTile.isMovable = true;
 
                 break;
             default:
