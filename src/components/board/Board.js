@@ -7,11 +7,9 @@ import { type } from 'os';
 //TODO: refactor the boardTiles and boardPieces arrays to be two dimensional
 
 class Board extends React.Component {
-    rboardTiles = [[],[],[],[],[],[],[],[]];
+    boardTiles = [[],[],[],[],[],[],[],[]];
 
-    boardTiles = [];
     boardPieces = [];
-    boardTilesElements=[];
     highlightedTiles= [];
     state = {
         userActionSelect : 'piece',
@@ -35,22 +33,54 @@ class Board extends React.Component {
                     color: (j%2)===0 ? (i%2===0 ? "white" : "grey") : (i%2===0 ? "grey" : "white"),
                     x: j,
                     y: i,
+                    isMovable: false,
                     piece: {
                         type: this.pieces[(Math.ceil(Math.random() * (this.pieces.length - 1)))],
                         color: 'white'
                     }
                 }
-                this.rboardTiles[i].push(tileObject);
+                this.boardTiles[i].push(tileObject);
             }
     }
 
-    boardClickHandler = (pieceType, row, col) => {
+    boardClickHandler = (tile) => {
         // console.log("column(x): " + col);
         // console.log("row(y): " + row);
+        console.log(tile)
         this.setState({ userActionSelect: this.state.userActionSelect === 'piece' ? 'tile' : "piece"});
-        this.setState({ pieceSelectedType: pieceType});
-        if(pieceType)
-            this.setHighlightedTiles(pieceType, col, row)
+        if(this.state.userActionSelect === 'piece'){
+            this.setState({ pieceSelectedType: tile.piece.type});
+            if(tile.piece.type)
+                this.setMovableTiles(tile)
+        }
+        else {
+            this.boardTiles.forEach(element => {
+                element.forEach(tile => {
+                    tile.isMovable = false;
+                })
+            });
+        }
+    }
+
+    //
+    setMovableTiles = (tile) => {
+        switch(tile.piece.type) {
+            case 'pawn':
+                break;
+            case 'bishop':
+                break;
+            case 'knight':
+                break;
+            case 'queen':
+                break;
+            case 'king':
+                console.log(tile.piece)
+                this.boardTiles[tile.y + 1][tile.x + 1].isMovable = true;
+
+                break;
+            default:
+                break;
+        }
     }
 
     //runs on every click of a piece
@@ -144,7 +174,6 @@ class Board extends React.Component {
             default:
         }
 
-        // console.log(this.boardTilesElements);
         this.forceUpdate();
     }
     */
@@ -162,20 +191,16 @@ class Board extends React.Component {
     }
 
     render() {
-        this.rboardTiles.map( rows => {
-            return rows.map((t,i) => console.log(t.piece))
-        })
+            // this.boardTiles.map( rows => {
+            //     return rows.map((t,i) => console.log(t.piece))
+            // })
         return(
             <div className="wrapper center">
                 {
-                    this.rboardTiles.map( rows => {
+                    this.boardTiles.map( rows => {
                         return rows.map((t,i) => (
                             <Tile
-                                tileColor={t.color}
-                                isHighlighted={this.getIfTileIsHighlighted(i) ? true : false}
-                                col={t.x}
-                                row={t.y}
-                                piece={t.piece}
+                                tile={t}
                                 whatToHover={this.state.userActionSelect}
                                 pieceClickFunction={this.boardClickHandler}
                             ></Tile>

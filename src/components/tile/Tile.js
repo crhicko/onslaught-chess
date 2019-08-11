@@ -18,20 +18,17 @@ const Tile = (props) => {
     }
     // console.log(props)
     return(
-        <div className={"tile" + " " + (props.whatToHover==="tile" ? "hoverable": "")} style={{backgroundColor: props.tileColor}}
+        <div className={"tile" + " " + (props.whatToHover==="tile" ? "hoverable": "")} style={{backgroundColor: props.tile.color}}
             onClick={
                 props.whatToHover==='tile' ? props.pieceClickFunction : null
             }>
 
             {
-                props.isHighlighted ? <div style={styles}></div> : null
+                props.tile.isMovable ? <div style={styles}></div> : null
             }
 
             <Piece
-                row={props.row}
-                col={props.col}
-                piece={props.piece}
-                // piece="knight"
+                tile={props.tile}
                 whatToHover={props.whatToHover}
                 pieceClickFunction={props.pieceClickFunction}
             ></Piece>
