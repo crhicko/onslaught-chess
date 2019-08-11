@@ -36,7 +36,9 @@ class Board extends React.Component {
                     isMovable: false,
                     piece: {
                         type: this.pieces[(Math.ceil(Math.random() * (this.pieces.length - 1)))],
-                        color: 'white'
+                        get color() {
+                            return (this.type === 'none' ? null : 'white');
+                        }
                     }
                 }
                 this.boardTiles[i].push(tileObject);
@@ -76,21 +78,21 @@ class Board extends React.Component {
             case 'king':
                 console.log(tile.piece)
                 let curTile
-                if((curTile = this.boardTiles[tile.y + 1][tile.x + 1]) !== undefined)
+                if((curTile = this.boardTiles[tile.y + 1][tile.x + 1]) !== undefined && curTile.piece.color !== tile.piece.color)
                     curTile.isMovable = true;
-                if((curTile = this.boardTiles[tile.y + 1][tile.x + 0]) !== undefined)
+                if((curTile = this.boardTiles[tile.y + 1][tile.x + 0]) !== undefined && curTile.piece.color !== tile.piece.color)
                     curTile.isMovable = true;
-                if((curTile = this.boardTiles[tile.y + 1][tile.x - 1]) !== undefined)
+                if((curTile = this.boardTiles[tile.y + 1][tile.x - 1]) !== undefined && curTile.piece.color !== tile.piece.color)
                     curTile.isMovable = true;
-                if((curTile = this.boardTiles[tile.y + 0][tile.x - 1]) !== undefined)
+                if((curTile = this.boardTiles[tile.y + 0][tile.x - 1]) !== undefined && curTile.piece.color !== tile.piece.color)
                     curTile.isMovable = true;
-                if((curTile = this.boardTiles[tile.y - 1][tile.x - 1]) !== undefined)
+                if((curTile = this.boardTiles[tile.y - 1][tile.x - 1]) !== undefined && curTile.piece.color !== tile.piece.color)
                     curTile.isMovable = true;
-                if((curTile = this.boardTiles[tile.y - 1][tile.x + 0]) !== undefined)
+                if((curTile = this.boardTiles[tile.y - 1][tile.x + 0]) !== undefined && curTile.piece.color !== tile.piece.color)
                     curTile.isMovable = true;
-                if((curTile = this.boardTiles[tile.y - 1][tile.x + 1]) !== undefined)
+                if((curTile = this.boardTiles[tile.y - 1][tile.x + 1]) !== undefined && curTile.piece.color !== tile.piece.color)
                     curTile.isMovable = true;
-                if((curTile = this.boardTiles[tile.y + 0][tile.x + 1]) !== undefined)
+                if((curTile = this.boardTiles[tile.y + 0][tile.x + 1]) !== undefined && curTile.piece.color !== tile.piece.color)
                     curTile.isMovable = true;
 
                 break;
