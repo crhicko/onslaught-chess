@@ -48,7 +48,7 @@ class Board extends React.Component {
     boardClickHandler = (tile) => {
         // console.log("column(x): " + col);
         // console.log("row(y): " + row);
-        console.log(tile)
+        // console.log(tile)
         this.setState({ userActionSelect: this.state.userActionSelect === 'piece' ? 'tile' : "piece"});
         if(this.state.userActionSelect === 'piece'){
             this.setState({ pieceSelectedType: tile.piece.type});
@@ -56,6 +56,7 @@ class Board extends React.Component {
                 this.setMovableTiles(tile)
         }
         else {
+            // console.log(tile.x)
             this.boardTiles.forEach(element => {
                 element.forEach(tile => {
                     tile.isMovable = false;
@@ -76,7 +77,7 @@ class Board extends React.Component {
             case 'queen':
                 break;
             case 'king':
-                console.log(tile.piece)
+                //TODO: clean this, fix y index -1 bug
                 let curTile
                 if((curTile = this.boardTiles[tile.y + 1][tile.x + 1]) !== undefined && curTile.piece.color !== tile.piece.color)
                     curTile.isMovable = true;
