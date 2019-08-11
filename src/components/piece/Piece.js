@@ -6,7 +6,7 @@ const Piece = (props) => {
     return(
         <div className={props.tile.piece.type + ' ' + (props.whatToHover==="piece" ? "hoverable": "")} >
             {
-                props.tile.piece.type ==='none' ? null : <img src={require("../../resources/images/" + props.tile.piece.color + props.tile.piece.type + ".png")}
+                props.tile.piece.type === null ? null : <img src={require("../../resources/images/" + props.tile.piece.color + props.tile.piece.type + ".png")}
                 alt="knight-piece"
                 width="75px"
                 zindex='100'

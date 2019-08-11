@@ -39,14 +39,21 @@ class Board extends React.Component {
                     isMovable: false,
                     piece: {
                         //type: this.pieces[(Math.ceil(Math.random() * (this.pieces.length - 1)))],
-                        type: (i == 4 && j == 4) ? 'king' : 'none',
+                        type: null,
                         get color() {
-                            return (this.type === 'none' ? null : 'white');
+                            return (this.type === null ? null : 'white');
                         }
                     }
                 }
                 this.boardTiles[i].push(tileObject);
             }
+
+        //test pieces
+        this.boardTiles[4][4].piece.type = 'king';
+        this.boardTiles[2][2].piece.type = 'bishop';
+        this.boardTiles[5][5].piece.type = 'rook';
+        this.boardTiles[5][6].piece.type = 'pawn';
+
     }
 
     boardClickHandler = (tile) => {
@@ -59,8 +66,10 @@ class Board extends React.Component {
                 this.setMovableTiles(tile)
         }
         else {
-            this.boardTiles[tile.y][tile.x].piece.type = this.state.pieceSelectedType;
-            this.boardTiles[this.state.currentTile.y][this.state.currentTile.x].piece.type = 'none' //since state.curtile is this tile, noning it will none all of it
+            if((tile.x !== this.state.currentTile.x || tile.y !== this.state.currentTile.y) && tile.isMovable){
+                this.boardTiles[tile.y][tile.x].piece.type = this.state.pieceSelectedType;
+                this.boardTiles[this.state.currentTile.y][this.state.currentTile.x].piece.type = null //since state.curtile is this tile, noning it will none all of it
+            }
             this.boardTiles.forEach(element => {
                 element.forEach(tile => {
                     tile.isMovable = false;
@@ -69,20 +78,46 @@ class Board extends React.Component {
         }
     }
 
+    // checkIfTileMovable(tile, curTile){
+    //     if(tile.piece.color == curTile.piece.color)
+    // }
     //
     setMovableTiles = (tile) => {
+        let curTile
         switch(tile.piece.type) {
             case 'pawn':
+                let yChange = -1;
+
+                if(tile.piece.color === 'white')
+                    yChange = -1;
+                else
+                    yChange = 1;
+
+                // this.boardTiles[tile.y + yChange][tile.x].isMovable = this.boardTiles[tile.y + yChange][tile.x] != null :
+                curTile = this.boardTiles[tile.y + yChange][tile.x];
+                console.log(curTile.piece.type)
+                if(curTile.piece.type == null)
+                    curTile.isMovable = true;
+                console.log(curTile.isMovable)
+                curTile = this.boardTiles[tile.y + yChange][tile.x - 1]
+                if(curTile.piece.type != null && curTile.piece.color != tile.piece.color)
+                    curTile.isMovable = true;
+                curTile = this.boardTiles[tile.y + yChange][tile.x + 1]
+                if(curTile.piece.type != null && curTile.piece.color != tile.piece.color)
+                    curTile.isMovable = true;
+
                 break;
             case 'bishop':
                 break;
             case 'knight':
                 break;
+            case 'rook':
+
+                break;
             case 'queen':
                 break;
             case 'king':
                 //TODO: clean this, fix y index -1 bug
-                let curTile
                 if((curTile = this.boardTiles[tile.y + 1][tile.x + 1]) !== undefined && curTile.piece.color !== tile.piece.color)
                     curTile.isMovable = true;
                 if((curTile = this.boardTiles[tile.y + 1][tile.x + 0]) !== undefined && curTile.piece.color !== tile.piece.color)
