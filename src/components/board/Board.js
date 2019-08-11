@@ -13,7 +13,10 @@ class Board extends React.Component {
     highlightedTiles= [];
     state = {
         userActionSelect : 'piece',
-        pieceSelectedType: null
+        pieceSelected: null,
+        currentTile : null,
+        x: null,
+        y: null
     }
     pieces = ['pawn','knight','bishop','queen','king','rook', 'none', 'none', 'none', 'none', 'none', 'none'];
 
@@ -35,7 +38,8 @@ class Board extends React.Component {
                     y: i,
                     isMovable: false,
                     piece: {
-                        type: this.pieces[(Math.ceil(Math.random() * (this.pieces.length - 1)))],
+                        //type: this.pieces[(Math.ceil(Math.random() * (this.pieces.length - 1)))],
+                        type: (i == 4 && j == 4) ? 'king' : 'none',
                         get color() {
                             return (this.type === 'none' ? null : 'white');
                         }
@@ -51,12 +55,38 @@ class Board extends React.Component {
         // console.log(tile)
         this.setState({ userActionSelect: this.state.userActionSelect === 'piece' ? 'tile' : "piece"});
         if(this.state.userActionSelect === 'piece'){
-            this.setState({ pieceSelectedType: tile.piece.type});
+            this.setState({ pieceSelected: tile.piece.type});
+            this.setState({ currentTile: tile})
+            console.log(tile)
             if(tile.piece.type)
                 this.setMovableTiles(tile)
         }
         else {
-            // console.log(tile.x)
+            //console.log(tile)
+            // new Promise(() => {
+            //     this.boardTiles[tile.y][tile.x].piece = this.state.currentTile.piece
+            // }).then(() => {
+            //     console.log(this.state.currentTile)
+            //     this.boardTiles[this.state.currentTile.y][this.state.currentTile.x].piece.type = 'none'
+            // })
+
+
+            console.log(this.state.pieceSelected)
+            //console.log(this.boardTiles[tile.y][tile.x])
+            this.boardTiles[tile.y][tile.x].piece.type = this.state.pieceSelected;
+            console.log(this.state.currentTile.piece)
+            this.boardTiles[this.state.currentTile.y][this.state.currentTile.x].piece.type = 'none' //since state.curtile is this tile, noning it will none all of it
+            console.log(this.state.currentTile.piece)
+
+
+
+            // console.log(this.state.currentTile)
+            // let tempTile = this.state.currentTile;
+            // console.log(this.state.currentTile)
+            // console.log(tempTile.piece)
+            // this.boardTiles[tile.y][tile.x].piece = tempTile.piece;    //sets the piece on the new square
+            // console.log(tempTile.piece)
+            // this.boardTiles[tempTile.y][tempTile.x].piece.type = 'none';
             this.boardTiles.forEach(element => {
                 element.forEach(tile => {
                     tile.isMovable = false;

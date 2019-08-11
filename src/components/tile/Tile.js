@@ -19,9 +19,8 @@ const Tile = (props) => {
     // console.log(props)
     return(
         <div className={"tile" + " " + (props.whatToHover==="tile" ? "hoverable": "")} style={{backgroundColor: props.tile.color}}
-            onClick={
+            onClick={() => props.whatToHover==='tile' ? props.pieceClickFunction(props.tile) : null
                 // props.whatToHover==='tile' ? props.pieceClickFunction : null
-                props.whatToHover==='tile' ? props.tile : null
             }>
 
             {
