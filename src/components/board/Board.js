@@ -1,8 +1,6 @@
 import React from 'react';
 import './Board.css';
 import Tile from '../tile/Tile'
-import { arrayExpression } from '@babel/types';
-import { type } from 'os';
 
 //TODO: refactor the boardTiles and boardPieces arrays to be two dimensional
 
@@ -12,13 +10,14 @@ class Board extends React.Component {
     boardPieces = [];
     highlightedTiles= [];
     state = {
+        userColor: 'white',
         userActionSelect : 'piece',
         pieceSelected: null,
         currentTile : null,
         x: null,
         y: null
     }
-    pieces = ['pawn','knight','bishop','queen','king','rook', 'none', 'none', 'none', 'none', 'none', 'none'];
+    pieces = ['pawn','knight','bishop','queen','king','rook'];
 
     getBoardPiece(x,y){
         return this.boardPieces[x + y*8];
@@ -40,19 +39,21 @@ class Board extends React.Component {
                     piece: {
                         //type: this.pieces[(Math.ceil(Math.random() * (this.pieces.length - 1)))],
                         type: null,
-                        get color() {
-                            return (this.type === null ? null : 'white');
-                        }
+                        color: null
+                        // get color() {
+                        //     return (this.type === null ? null : 'white');
+                        // }
                     }
                 }
                 this.boardTiles[i].push(tileObject);
             }
 
         //test pieces
-        this.boardTiles[4][4].piece.type = 'king';
-        this.boardTiles[2][2].piece.type = 'bishop';
-        this.boardTiles[5][5].piece.type = 'rook';
-        this.boardTiles[5][6].piece.type = 'pawn';
+        this.boardTiles[4][4].piece = {type: 'rook', color: 'white'};
+        this.boardTiles[2][2].piece = {type: 'bishop', color: 'white'};
+        this.boardTiles[5][5].piece = {type: 'rook', color: 'white'};
+        this.boardTiles[5][6].piece = {type: 'pawn', color: 'white'};
+        this.boardTiles[4][1].piece = {type: 'pawn', color: 'black'};
 
     }
 
@@ -68,7 +69,10 @@ class Board extends React.Component {
         else {
             if((tile.x !== this.state.currentTile.x || tile.y !== this.state.currentTile.y) && tile.isMovable){
                 this.boardTiles[tile.y][tile.x].piece.type = this.state.pieceSelectedType;
+                this.boardTiles[tile.y][tile.x].piece.color = this.state.userColor;
+                // this.boardTiles[tile.y][tile.x].piece.type = this.pieces[(Math.ceil(Math.random() * (this.pieces.length - 1)))]
                 this.boardTiles[this.state.currentTile.y][this.state.currentTile.x].piece.type = null //since state.curtile is this tile, noning it will none all of it
+                this.boardTiles[this.state.currentTile.y][this.state.currentTile.x].piece.color = null
             }
             this.boardTiles.forEach(element => {
                 element.forEach(tile => {
@@ -94,17 +98,24 @@ class Board extends React.Component {
                     yChange = 1;
 
                 // this.boardTiles[tile.y + yChange][tile.x].isMovable = this.boardTiles[tile.y + yChange][tile.x] != null :
-                curTile = this.boardTiles[tile.y + yChange][tile.x];
-                console.log(curTile.piece.type)
-                if(curTile.piece.type == null)
-                    curTile.isMovable = true;
-                console.log(curTile.isMovable)
-                curTile = this.boardTiles[tile.y + yChange][tile.x - 1]
-                if(curTile.piece.type != null && curTile.piece.color != tile.piece.color)
-                    curTile.isMovable = true;
-                curTile = this.boardTiles[tile.y + yChange][tile.x + 1]
-                if(curTile.piece.type != null && curTile.piece.color != tile.piece.color)
-                    curTile.isMovable = true;
+                if(tile.y + yChange >= 0 && tile.y + yChange <= 7){
+                    curTile = this.boardTiles[tile.y + yChange][tile.x];
+                    console.log(curTile.piece.type)
+                    if(curTile.piece.type == null)
+                        curTile.isMovable = true;
+                }
+
+                if(tile.y + yChange >= 0 && tile.y + yChange <= 7){
+                    curTile = this.boardTiles[tile.y + yChange][tile.x - 1]
+                    if(curTile.piece.type != null && curTile.piece.color != tile.piece.color)
+                        curTile.isMovable = true;
+                }
+
+                if(tile.y + yChange >= 0 && tile.y + yChange <= 7){
+                    curTile = this.boardTiles[tile.y + yChange][tile.x + 1]
+                    if(curTile.piece.type != null && curTile.piece.color != tile.piece.color)
+                        curTile.isMovable = true;
+                }
 
                 break;
             case 'bishop':
@@ -112,29 +123,67 @@ class Board extends React.Component {
             case 'knight':
                 break;
             case 'rook':
-
+                for(let i = 1; tile.y - i >= 0 && tile.y - i <= 7; i++){
+                    curTile = this.boardTiles[tile.y - i][tile.x];
+                    if(curTile.piece.color === "white")
+                        break;
+                    curTile.isMovable = true;
+                    if(curTile.piece.color === "black")
+                        break;
+                }
+                for(let i = 1; tile.y + i >= 0 && tile.y + i <= 7; i++){
+                    curTile = this.boardTiles[tile.y + i][tile.x];
+                    if(curTile.piece.color === "white")
+                        break;
+                    curTile.isMovable = true;
+                    if(curTile.piece.color === "black")
+                        break;
+                }
+                for(let i = 1; tile.x - i >= 0 && tile.x - i <= 7; i++){
+                    curTile = this.boardTiles[tile.y][tile.x - i];
+                    if(curTile.piece.color === "white")
+                        break;
+                    curTile.isMovable = true;
+                    if(curTile.piece.color === "black")
+                        break;
+                }
+                for(let i = 1; tile.x + i >= 0 && tile.x + i <= 7; i++){
+                    curTile = this.boardTiles[tile.y][tile.x + i];
+                    if(curTile.piece.color === "white")
+                        break;
+                    curTile.isMovable = true;
+                    if(curTile.piece.color === "black")
+                        break;
+                }
                 break;
             case 'queen':
                 break;
             case 'king':
                 //TODO: clean this, fix y index -1 bug
-                if((curTile = this.boardTiles[tile.y + 1][tile.x + 1]) !== undefined && curTile.piece.color !== tile.piece.color)
-                    curTile.isMovable = true;
-                if((curTile = this.boardTiles[tile.y + 1][tile.x + 0]) !== undefined && curTile.piece.color !== tile.piece.color)
-                    curTile.isMovable = true;
-                if((curTile = this.boardTiles[tile.y + 1][tile.x - 1]) !== undefined && curTile.piece.color !== tile.piece.color)
-                    curTile.isMovable = true;
-                if((curTile = this.boardTiles[tile.y + 0][tile.x - 1]) !== undefined && curTile.piece.color !== tile.piece.color)
-                    curTile.isMovable = true;
-                if((curTile = this.boardTiles[tile.y - 1][tile.x - 1]) !== undefined && curTile.piece.color !== tile.piece.color)
-                    curTile.isMovable = true;
-                if((curTile = this.boardTiles[tile.y - 1][tile.x + 0]) !== undefined && curTile.piece.color !== tile.piece.color)
-                    curTile.isMovable = true;
-                if((curTile = this.boardTiles[tile.y - 1][tile.x + 1]) !== undefined && curTile.piece.color !== tile.piece.color)
-                    curTile.isMovable = true;
-                if((curTile = this.boardTiles[tile.y + 0][tile.x + 1]) !== undefined && curTile.piece.color !== tile.piece.color)
-                    curTile.isMovable = true;
-
+                if(tile.y + 1 >=0 && tile.y + 1 <= 7)
+                    if((curTile = this.boardTiles[tile.y + 1][tile.x + 1]) !== undefined && curTile.piece.color !== tile.piece.color)
+                        curTile.isMovable = true;
+                if(tile.y + 1 >=0 && tile.y + 1 <= 7)
+                    if((curTile = this.boardTiles[tile.y + 1][tile.x + 0]) !== undefined && curTile.piece.color !== tile.piece.color)
+                        curTile.isMovable = true;
+                if(tile.y + 1 >=0 && tile.y + 1 <= 7)
+                    if((curTile = this.boardTiles[tile.y + 1][tile.x - 1]) !== undefined && curTile.piece.color !== tile.piece.color)
+                        curTile.isMovable = true;
+                if(tile.y + 0 >=0 && tile.y + 0 <= 7)
+                    if((curTile = this.boardTiles[tile.y + 0][tile.x - 1]) !== undefined && curTile.piece.color !== tile.piece.color)
+                        curTile.isMovable = true;
+                if(tile.y - 1 >=0 && tile.y - 1 <= 7)
+                    if((curTile = this.boardTiles[tile.y - 1][tile.x - 1]) !== undefined && curTile.piece.color !== tile.piece.color)
+                        curTile.isMovable = true;
+                if(tile.y - 1 >=0 && tile.y - 1 <= 7)
+                    if((curTile = this.boardTiles[tile.y - 1][tile.x + 0]) !== undefined && curTile.piece.color !== tile.piece.color)
+                        curTile.isMovable = true;
+                if(tile.y - 1 >=0 && tile.y - 1 <= 7)
+                    if((curTile = this.boardTiles[tile.y - 1][tile.x + 1]) !== undefined && curTile.piece.color !== tile.piece.color)
+                        curTile.isMovable = true;
+                if(tile.y + 0 >=0 && tile.y + 0 <= 7)
+                    if((curTile = this.boardTiles[tile.y + 0][tile.x + 1]) !== undefined && curTile.piece.color !== tile.piece.color)
+                        curTile.isMovable = true;
                 break;
             default:
                 break;
