@@ -50,7 +50,7 @@ class Board extends React.Component {
 
         //test pieces
         this.boardTiles[4][4].piece = {type: 'rook', color: 'white'};
-        this.boardTiles[2][2].piece = {type: 'bishop', color: 'white'};
+        this.boardTiles[2][1].piece = {type: 'bishop', color: 'white'};
         this.boardTiles[5][5].piece = {type: 'rook', color: 'white'};
         this.boardTiles[5][6].piece = {type: 'pawn', color: 'white'};
         this.boardTiles[4][1].piece = {type: 'pawn', color: 'black'};
@@ -58,13 +58,17 @@ class Board extends React.Component {
     }
 
     boardClickHandler = (tile) => {
-        this.setState({ userActionSelect: this.state.userActionSelect === 'piece' ? 'tile' : "piece"});
+
         if(this.state.userActionSelect === 'piece'){
+            if(tile.piece.color !== this.state.userColor)
+                return;
+            if(tile.piece.type)
+                if(this.setMovableTiles(tile) === 0)
+                    return;
+
             this.setState({ pieceSelectedType: tile.piece.type});   //passing the whole object causes it to be reference notprimitve, breaking the movement
             this.setState({ currentTile: tile})
             console.log(tile)
-            if(tile.piece.type)
-                this.setMovableTiles(tile)
         }
         else {
             if((tile.x !== this.state.currentTile.x || tile.y !== this.state.currentTile.y) && tile.isMovable){
@@ -80,14 +84,25 @@ class Board extends React.Component {
                 })
             });
         }
+
+        this.setState({ userActionSelect: this.state.userActionSelect === 'piece' ? 'tile' : "piece"});
     }
 
     // checkIfTileMovable(tile, curTile){
     //     if(tile.piece.color == curTile.piece.color)
     // }
     //
+    setMovableAndUpCount
+
     setMovableTiles = (tile) => {
-        let curTile
+        let curTile;
+        let tileCount = 0;
+
+        function setMovableAndUpCount(tile){
+            tileCount++;
+            tile.isMovable = true;
+        }
+
         switch(tile.piece.type) {
             case 'pawn':
                 let yChange = -1;
@@ -102,23 +117,55 @@ class Board extends React.Component {
                     curTile = this.boardTiles[tile.y + yChange][tile.x];
                     console.log(curTile.piece.type)
                     if(curTile.piece.type == null)
-                        curTile.isMovable = true;
+                        setMovableAndUpCount(curTile)
                 }
 
                 if(tile.y + yChange >= 0 && tile.y + yChange <= 7){
                     curTile = this.boardTiles[tile.y + yChange][tile.x - 1]
                     if(curTile.piece.type != null && curTile.piece.color != tile.piece.color)
-                        curTile.isMovable = true;
+                        setMovableAndUpCount(curTile);
                 }
 
                 if(tile.y + yChange >= 0 && tile.y + yChange <= 7){
                     curTile = this.boardTiles[tile.y + yChange][tile.x + 1]
                     if(curTile.piece.type != null && curTile.piece.color != tile.piece.color)
-                        curTile.isMovable = true;
+                        setMovableAndUpCount(curTile);
                 }
 
                 break;
             case 'bishop':
+                for(let i = 1; tile.y - i >= 0 && tile.x - i >= 0; i++){
+                    curTile = this.boardTiles[tile.y - i][tile.x - i];
+                    if(curTile.piece.color === "white")
+                        break;
+                    setMovableAndUpCount(curTile);
+                    if(curTile.piece.color === "black")
+                        break;
+                }
+                for(let i = 1; tile.y - i >= 0 && tile.x + i <= 7; i++){
+                    curTile = this.boardTiles[tile.y - i][tile.x + i];
+                    if(curTile.piece.color === "white")
+                        break;
+                    setMovableAndUpCount(curTile);
+                    if(curTile.piece.color === "black")
+                        break;
+                }
+                for(let i = 1; tile.y + i <= 7 && tile.x + i <= 7; i++){
+                    curTile = this.boardTiles[tile.y + i][tile.x + i];
+                    if(curTile.piece.color === "white")
+                        break;
+                    setMovableAndUpCount(curTile);
+                    if(curTile.piece.color === "black")
+                        break;
+                }
+                for(let i = 1; tile.y + i <= 7 && tile.x - i >= 0; i++){
+                    curTile = this.boardTiles[tile.y + i][tile.x - i];
+                    if(curTile.piece.color === "white")
+                        break;
+                    setMovableAndUpCount(curTile);
+                    if(curTile.piece.color === "black")
+                        break;
+                }
                 break;
             case 'knight':
                 break;
@@ -127,7 +174,7 @@ class Board extends React.Component {
                     curTile = this.boardTiles[tile.y - i][tile.x];
                     if(curTile.piece.color === "white")
                         break;
-                    curTile.isMovable = true;
+                    setMovableAndUpCount(curTile);
                     if(curTile.piece.color === "black")
                         break;
                 }
@@ -135,7 +182,7 @@ class Board extends React.Component {
                     curTile = this.boardTiles[tile.y + i][tile.x];
                     if(curTile.piece.color === "white")
                         break;
-                    curTile.isMovable = true;
+                    setMovableAndUpCount(curTile);
                     if(curTile.piece.color === "black")
                         break;
                 }
@@ -143,7 +190,7 @@ class Board extends React.Component {
                     curTile = this.boardTiles[tile.y][tile.x - i];
                     if(curTile.piece.color === "white")
                         break;
-                    curTile.isMovable = true;
+                    setMovableAndUpCount(curTile);
                     if(curTile.piece.color === "black")
                         break;
                 }
@@ -151,7 +198,7 @@ class Board extends React.Component {
                     curTile = this.boardTiles[tile.y][tile.x + i];
                     if(curTile.piece.color === "white")
                         break;
-                    curTile.isMovable = true;
+                    setMovableAndUpCount(curTile);
                     if(curTile.piece.color === "black")
                         break;
                 }
@@ -162,32 +209,35 @@ class Board extends React.Component {
                 //TODO: clean this, fix y index -1 bug
                 if(tile.y + 1 >=0 && tile.y + 1 <= 7)
                     if((curTile = this.boardTiles[tile.y + 1][tile.x + 1]) !== undefined && curTile.piece.color !== tile.piece.color)
-                        curTile.isMovable = true;
+                        setMovableAndUpCount(curTile);
                 if(tile.y + 1 >=0 && tile.y + 1 <= 7)
                     if((curTile = this.boardTiles[tile.y + 1][tile.x + 0]) !== undefined && curTile.piece.color !== tile.piece.color)
-                        curTile.isMovable = true;
+                        setMovableAndUpCount(curTile);
                 if(tile.y + 1 >=0 && tile.y + 1 <= 7)
                     if((curTile = this.boardTiles[tile.y + 1][tile.x - 1]) !== undefined && curTile.piece.color !== tile.piece.color)
-                        curTile.isMovable = true;
+                        setMovableAndUpCount(curTile);
                 if(tile.y + 0 >=0 && tile.y + 0 <= 7)
                     if((curTile = this.boardTiles[tile.y + 0][tile.x - 1]) !== undefined && curTile.piece.color !== tile.piece.color)
-                        curTile.isMovable = true;
+                        setMovableAndUpCount(curTile);
                 if(tile.y - 1 >=0 && tile.y - 1 <= 7)
                     if((curTile = this.boardTiles[tile.y - 1][tile.x - 1]) !== undefined && curTile.piece.color !== tile.piece.color)
-                        curTile.isMovable = true;
+                        setMovableAndUpCount(curTile);
                 if(tile.y - 1 >=0 && tile.y - 1 <= 7)
                     if((curTile = this.boardTiles[tile.y - 1][tile.x + 0]) !== undefined && curTile.piece.color !== tile.piece.color)
-                        curTile.isMovable = true;
+                        setMovableAndUpCount(curTile);
                 if(tile.y - 1 >=0 && tile.y - 1 <= 7)
                     if((curTile = this.boardTiles[tile.y - 1][tile.x + 1]) !== undefined && curTile.piece.color !== tile.piece.color)
-                        curTile.isMovable = true;
+                        setMovableAndUpCount(curTile);
                 if(tile.y + 0 >=0 && tile.y + 0 <= 7)
                     if((curTile = this.boardTiles[tile.y + 0][tile.x + 1]) !== undefined && curTile.piece.color !== tile.piece.color)
-                        curTile.isMovable = true;
+                        setMovableAndUpCount(curTile);
                 break;
             default:
                 break;
         }
+
+        console.log(tileCount);
+        return tileCount;
     }
 
     //runs on every click of a piece
